@@ -1,0 +1,28 @@
+2. Notes on timing for extraLargeArray being passed through doublerAppend and doublerInsert:
+    Timer results for doublerInsert: 772.905792 ms
+    Timer results for doublerAppend: 2.017791 ms
+
+    The difference in runtime between the two functions is staggering. doublerAppend accomplished running its code 386 times faster than doublerInsert. While both are super fast as far as real time is concerned, the push method is much faster at scale.
+
+3. Table of results (using different sized arrays)
+
+    Arr Size        |    doublerAppend Time  |   doublerInsert Time
+    ---------------------------------------------------------------
+    tinyArray       |   49.709 μs            |      18.292 μs
+    ---------------------------------------------------------------
+    smallArray      |   52.875 μs            |      25.5 μs
+    ---------------------------------------------------------------
+    mediumArray     |   106.041 μs           |      156.709 μs
+    ---------------------------------------------------------------
+    largeArray      |   503.584 μs           |      7.764833 ms
+    ---------------------------------------------------------------
+    extraLargeArray |   2.017791 ms          |      772.905792 ms
+
+4. Read over the results, and write a paragraph that explains the pattern you see. How does each function “scale”? Which of the two functions scales better? How can you tell?
+
+    It is interesting to see how these two functions react to increasingly large data-sets (arrays in this case). When there are only a few entries in the particular array, lets say 10 to 100, the insert array function (.unshift) is much faster and efficient at runtime than .push (append). However, as soon as we use arrays with 1000 or more items, append becomes the much more efficient choice. Their runtime relationship seems to invert. Inserting (.unshift) into the array seems to take orders of magnitude longer than just appending. If one were to work with small data sets only (less than 1000), the better choice would be to use insert. However, if efficiency at massive scale is needed (more than 1000 items in an array), append or .push is the best course of action.
+
+
+5. Exra credit: For extra credit, do some review / research on why the slower function is so slow, and summarize the reasoning for this.
+
+    Unshift is so much slower than push because of what it does to each value in an array. Push adds a values to the end of an array. Since each value has an address in memory, there is no need to change the addresses and values for the values that were already in the array. Unshift puts values at the begining of an array–and accomplishes this by shifting every value already in the array over the amount of spaces that it needs clear to add new values to the beginning. It does not do this all at once, however. Each value must be reassigned a position in memory one at a time. Essentially, it is a for loop that moves through the entire length of the array. When you have a massive array, this can take a very long time.
